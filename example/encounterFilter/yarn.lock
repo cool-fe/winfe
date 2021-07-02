@@ -1412,22 +1412,22 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@winfe/cli-core@^1.0.17":
-  version "1.0.17"
-  resolved "https://registry.npmjs.org/@winfe/cli-core/-/cli-core-1.0.17.tgz#3405896301b04504b088415d061ad249ad2a5a67"
-  integrity sha512-yqCa89vang6UrZ9yJJXx9miRtyil0nPzSNvNS/CqHVttrs1y8RFkvklZzLWI90vDSIqu+6I8cZvH1xk3vcTW8A==
+"@winfe/cli-core@^1.0.18":
+  version "1.0.18"
+  resolved "https://registry.npmjs.org/@winfe/cli-core/-/cli-core-1.0.18.tgz#13931a55257f06add30c6f7224b6bec922779098"
+  integrity sha512-FnUGc/fAo0m0e8gBQyH9Y7A5FfOrR+pr/EG3/fROt9Qcfj2spFcV6Fkw5yWmyMBDWkP44vM1I7B2Ld6sZsEIZA==
   dependencies:
     minimist "^1.2.5"
     mri "^1.1.6"
 
-"@winfe/cli-plugin-add@^1.0.17":
-  version "1.0.17"
-  resolved "https://registry.npmjs.org/@winfe/cli-plugin-add/-/cli-plugin-add-1.0.17.tgz#b5de398e965408e8399537ef550abcb0ee68c72a"
-  integrity sha512-UzWIbH1LvBPgZ0ph8LwjCJrqwGsU798OT3A4E8BklDc6O5ZoZL7Rl9Yao5dlc3thn36UIUuf4MsdYO/eHhUNiQ==
+"@winfe/cli-plugin-add@^1.0.18":
+  version "1.0.18"
+  resolved "https://registry.npmjs.org/@winfe/cli-plugin-add/-/cli-plugin-add-1.0.18.tgz#c7cd50748648eed86ce92bd8ca30b697d44053ca"
+  integrity sha512-iiBwuu8nwxl2oy115p49h+8x7NBOqvHw0dhFyF/aH4aHCoBsXxfGb/OWWj/9cckO+YRNUpjoPpeSFOkGxoguzw==
   dependencies:
     "@types/execa" "^2.0.0"
     "@types/node" "^15.3.0"
-    "@winfe/cli-core" "^1.0.17"
+    "@winfe/cli-core" "^1.0.18"
     "@winfe/get-materials" "^1.0.8"
     download-package-tarball "^1.0.7"
     enquirer "^2.3.6"
@@ -1435,17 +1435,17 @@
     fs-extra "^10.0.0"
     ora "^5.4.0"
 
-"@winfe/cli-plugin-fire@^1.0.17":
-  version "1.0.17"
-  resolved "https://registry.npmjs.org/@winfe/cli-plugin-fire/-/cli-plugin-fire-1.0.17.tgz#d265b21eee04cfd37bda2d909556a522e01c6689"
-  integrity sha512-NWq1JZ3kTHxw5VPbKkJInAM8NkNJN+SGPB8tFTdpvHw6lpT9evLCQo4xobNNNVcWOa2MbhsY1gSZkjbGe06BtA==
+"@winfe/cli-plugin-fire@^1.0.18":
+  version "1.0.18"
+  resolved "https://registry.npmjs.org/@winfe/cli-plugin-fire/-/cli-plugin-fire-1.0.18.tgz#233f275d973efdc398ad67ba54f02f4eb3f14eac"
+  integrity sha512-jbTCj5WVZcIoY2R92QTlbqNsoNmm/xctSIsgMOdZJytcEbIs85+Qd87x+sA87IjYdA5Lrr4UZpe5UfDWAPY9Zg==
   dependencies:
     "@babel/core" "^7.8.4"
     "@lerna/collect-updates" "^4.0.0"
     "@lerna/package-graph" "^4.0.0"
     "@lerna/project" "^4.0.0"
     "@vue/babel-preset-app" "^4.1.2"
-    "@winfe/cli-core" "^1.0.17"
+    "@winfe/cli-core" "^1.0.18"
     autoprefixer "^9.5.1"
     babel-loader "^8.0.4"
     cache-loader "^3.0.0"
@@ -1501,15 +1501,15 @@
     webpack-merge "^4.1.2"
     webpackbar "3.2.0"
 
-"@winfe/cli-plugin-init@^1.0.17":
-  version "1.0.17"
-  resolved "https://registry.npmjs.org/@winfe/cli-plugin-init/-/cli-plugin-init-1.0.17.tgz#af4630a9fc0cfa7e1d2016f7168f7c6682615548"
-  integrity sha512-E38oxelDWx+1FTjhKa/jjdPCu80CEc50DxgFZnRvGSlieeW9RP6ewNrxCwMvlLdy0m6PRrcvVxGLmZfH/oiEcg==
+"@winfe/cli-plugin-init@^1.0.18":
+  version "1.0.18"
+  resolved "https://registry.npmjs.org/@winfe/cli-plugin-init/-/cli-plugin-init-1.0.18.tgz#f8f1d53e63a7760e2b1b5435ea7d01b157c10627"
+  integrity sha512-kjfQf20nDW0novaIwXGlEFlqy0rPhcuMFil13w33K6AvVORF171JU34bwrNIIyqr0SK3cp1l9XywRncEGdQyDg==
   dependencies:
     "@types/fs-extra" "^9.0.11"
     "@types/ini" "^1.3.30"
     "@types/validate-npm-package-name" "^3.0.2"
-    "@winfe/cli-core" "^1.0.17"
+    "@winfe/cli-core" "^1.0.18"
     "@winfe/get-materials" "^1.0.8"
     chalk "^4.1.0"
     cross-spawn "^7.0.3"
@@ -1526,12 +1526,12 @@
     superb "^4.0.0"
     validate-npm-package-name "^3.0.0"
 
-"@winfe/cli-plugin-lint@^1.0.17":
-  version "1.0.17"
-  resolved "https://registry.npmjs.org/@winfe/cli-plugin-lint/-/cli-plugin-lint-1.0.17.tgz#b74ed4566d876bf4bbafaa87a29d02848052c9f0"
-  integrity sha512-g26C4AdB2x+LMMgHK9PQ6kpgJlZEa326mGH7i7VUvMtADsJmVhFDy77zDpRWUZLVe/eFJW3wU4zJBe3bwSkePQ==
+"@winfe/cli-plugin-lint@^1.0.18":
+  version "1.0.18"
+  resolved "https://registry.npmjs.org/@winfe/cli-plugin-lint/-/cli-plugin-lint-1.0.18.tgz#d3a415c423d88c9ce373e4e382b9bcd6c7ec7ea0"
+  integrity sha512-AiNYpkSBxGPFBjMNl6nDx9VFo9sHDvLFd95wb+WkS7M/Y4hlVeg9WMt+qHQkW43LrdBbfcvCKJN6mJLNccoQCw==
   dependencies:
-    "@winfe/cli-core" "^1.0.17"
+    "@winfe/cli-core" "^1.0.18"
     chalk "^4.1.0"
     command-exists "^1.2.9"
     cross-spawn "^7.0.3"
@@ -1552,18 +1552,18 @@
     fs-extra "^10.0.0"
     minio "^7.0.18"
 
-"@winfe/winex-cli@^1.0.17":
-  version "1.0.17"
-  resolved "https://registry.npmjs.org/@winfe/winex-cli/-/winex-cli-1.0.17.tgz#6235bf6e757da659fefac5330cb4c2077229e5d3"
-  integrity sha512-flmV72UrA8OaWaDH+Nf1QD1LZK4nKHAGCbD2YqTvisljPaEB0xsIRrFPNTozGBEG1KJA/TXlHx1A5AqUWY53XA==
+"@winfe/winex-cli@^1.0.18":
+  version "1.0.18"
+  resolved "https://registry.npmjs.org/@winfe/winex-cli/-/winex-cli-1.0.18.tgz#7a0bf2cd6d01b157d7b57791dbaa95484a72bd03"
+  integrity sha512-HQWiThpBxe5J+hByz4VnFa/VH1lGZIbIncDtbam6HyvzRikhKANWxz39rdKL1K7hANh4so2pFqi1J+68khSd7g==
   dependencies:
     "@sentry/node" "^6.7.2"
     "@sentry/tracing" "^6.7.2"
-    "@winfe/cli-core" "^1.0.17"
-    "@winfe/cli-plugin-add" "^1.0.17"
-    "@winfe/cli-plugin-fire" "^1.0.17"
-    "@winfe/cli-plugin-init" "^1.0.17"
-    "@winfe/cli-plugin-lint" "^1.0.17"
+    "@winfe/cli-core" "^1.0.18"
+    "@winfe/cli-plugin-add" "^1.0.18"
+    "@winfe/cli-plugin-fire" "^1.0.18"
+    "@winfe/cli-plugin-init" "^1.0.18"
+    "@winfe/cli-plugin-lint" "^1.0.18"
     child_process "^1.0.2"
     ini "^2.0.0"
 

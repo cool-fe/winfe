@@ -1,4 +1,4 @@
-/* eslint-disable node/no-unpublished-import */
+// eslint-disable-next-line node/no-unpublished-import
 import Request from '../../../packages/win-request';
 
 const request = new Request({ baseURL: '/outpat-person' });
