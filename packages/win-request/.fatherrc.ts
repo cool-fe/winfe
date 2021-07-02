@@ -1,3 +1,6 @@
 export default {
-  disableTypeCheck: false,
+  target: 'browser',
+  cjs: { type: 'rollup', lazy: false },
+  esm: { type: 'rollup' },
+  disableTypeCheck: false
 };

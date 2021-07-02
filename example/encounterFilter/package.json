@@ -1,0 +1,9 @@
+{
+  "name": "encounterFilter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@winfe/winex-cli": "^1.0.17"
+  }
+}

@@ -2,11 +2,11 @@ import axios from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosPromise } from 'axios';
 
 import {
-  pendingRequest,
   getCookieData as getCookieDataUtil,
   showErrMessage,
   clearPendingRequest,
-  showSuccessMessage
+  showSuccessMessage,
+  noop
 } from './util';
 
 import type { COOKIE_DATA, MessageInstance } from './util';
@@ -14,14 +14,13 @@ import type { COOKIE_DATA, MessageInstance } from './util';
 import requestInterceptor from './interceptor/request';
 import responseInterceptor from './interceptor/response';
 
-interface RequestArgvOptions {
+interface IRequestArgvOptions {
   message: null;
   baseUrl?: string;
   baseURL?: string;
 }
 
-interface RequestOptions {
-  baseUrl?: string;
+interface IRequestOpts {
   baseURL?: string;
   method: string;
   warning: boolean;
@@ -52,16 +51,15 @@ export default class Request {
 
   message: MessageInstance;
 
-  options: RequestOptions | RequestArgvOptions;
+  options: IRequestOpts | IRequestArgvOptions;
 
-  constructor(options: RequestArgvOptions) {
+  constructor(options: IRequestArgvOptions) {
     this.service = axios.create({
-      baseURL: options.baseUrl || '',
+      baseURL: options.baseURL || options.baseUrl || '',
       timeout: 100000
     });
-    this.message = options.message || '';
+    this.message = options.message || noop;
     this.options = {
-      method: 'post',
       warning: true,
       cover: true,
       login: true,
@@ -80,9 +78,9 @@ export default class Request {
     return getCookieDataUtil();
   }
 
-  // pending 状态map
-  static getPendingRequestMap(): Map<string, any> {
-    return pendingRequest;
+  get getCookieData(): typeof Request.getCookieData {
+    console.log('deprate');
+    return this.getCookieData;
   }
 
   // 清除请求
@@ -90,8 +88,18 @@ export default class Request {
     return clearPendingRequest(whiteList);
   }
 
+  get clear(): typeof Request.clear {
+    console.log('deprate');
+    return this.clear;
+  }
+
   static async asyncClear(whiteList: string[] = []): Promise<void> {
     clearPendingRequest(whiteList);
+  }
+
+  get asyncClear(): typeof Request.asyncClear {
+    console.log('deprate');
+    return this.asyncClear;
   }
 
   generate(data: AxiosRequestConfig, options: any): AxiosPromise<any> {

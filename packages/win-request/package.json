@@ -5,16 +5,16 @@
   "engines": {
     "node": ">=12.0.0"
   },
-  "main": "lib/index.js",
-  "module": "src/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "lib/"
+    "dist"
   ],
   "keywords": [
     "winfe",
     "request",
-    "node"
+    "brower"
   ],
   "repository": {
     "url": "https://github.com/cool-fe/winfe.git",

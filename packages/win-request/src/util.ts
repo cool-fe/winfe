@@ -77,14 +77,12 @@ function getCookie(): CookieData {
 }
 
 export function getUserInfo(): CookieData {
-  let userInfo = Cookie.get('userInfo');
+  const userInfo = Cookie.get('userInfo');
   try {
-    userInfo = userInfo ? JSON.parse(userInfo) : {};
+    return userInfo ? JSON.parse(userInfo) : {};
   } catch (e) {
-    userInfo = {};
-    console.log(e);
+    return {};
   }
-  return userInfo;
 }
 
 export function getRequestHeader(): CookieData {
@@ -116,10 +114,8 @@ export function refreshCookieData(): typeof COOKIE_DATA {
     Cookie.get('BEARER_TOKEN') !== COOKIE_DATA.header.Authorization ||
     (Cookie.get('W-EVENT') && Cookie.get('W-EVENT') !== COOKIE_DATA.header['W-EVENT'])
   ) {
-    COOKIE_DATA = {
-      user: getUserInfo() || {},
-      header: getRequestHeader()
-    };
+    COOKIE_DATA.user = getUserInfo() || {};
+    COOKIE_DATA.header = getRequestHeader();
   }
   return COOKIE_DATA;
 }
@@ -240,3 +236,5 @@ export const handleError = (err: ErrorInfoStructure): ErrorInfoStructure => {
   }
   return err;
 };
+
+export const noop = (): void => undefined;
