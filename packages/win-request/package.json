@@ -1,0 +1,38 @@
+{
+  "name": "@winfe/win-request",
+  "version": "0.0.1",
+  "scripts": {},
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "main": "lib/index.js",
+  "module": "src/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/"
+  ],
+  "keywords": [
+    "winfe",
+    "request",
+    "node"
+  ],
+  "repository": {
+    "url": "https://github.com/cool-fe/winfe.git",
+    "directory": "packages/winfe-request",
+    "type": "ts"
+  },
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org/",
+    "access": "public"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "js-cookie": "^2.2.1",
+    "lodash": "^4.17.21"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/js-cookie": "^2.2.6",
+    "@types/lodash": "^4.14.170"
+  }
+}
