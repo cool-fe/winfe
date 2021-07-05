@@ -17,6 +17,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@babel/runtime": "^7.14.6",
     "chalk": "^4.1.0",
     "cross-spawn": "^7.0.3"
   },

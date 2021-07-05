@@ -1,15 +1,19 @@
-import Request from 'his-request'
+// import Request from 'his-request'
+// eslint-disable-next-line node/no-unpublished-import
+import Request from '../../../../packages/win-request';
 
 const patientRequest1 = new Request({
   baseURL: '/person_component/',
   repeat: true
-})
+});
 const patientRequest2 = new Request({
   baseURL: '/outpat-person/',
   repeat: true
-})
+});
 
-export const apiQueryPatientTags = patientRequest1.temp('/api/v1/person_component/tag_info/query/by_example')
+export const apiQueryPatientTags = patientRequest1.temp(
+  '/api/v1/person_component/tag_info/query/by_example'
+);
 
 /**
  * params: {
@@ -22,4 +26,4 @@ export const apiQueryPatientTags = patientRequest1.temp('/api/v1/person_componen
     ]
   }
  */
-export const apiSavePatientTags = patientRequest2.temp('/api/v1/person_cis/patient_tag/save')
+export const apiSavePatientTags = patientRequest2.temp('/api/v1/person_cis/patient_tag/save');

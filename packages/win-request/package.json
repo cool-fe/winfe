@@ -7,7 +7,7 @@
     "brower": ">= 42"
   },
   "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "module": "es/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
@@ -27,6 +27,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@babel/runtime": "^7.14.6",
     "axios": "^0.21.1",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.21"

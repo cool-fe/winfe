@@ -19,7 +19,8 @@ export const getCardList = request.temp(getCardListUrl, {
 export const getSettingCardList = request3.temp(getSettingCardListUrl, {
   failTxt: '获取读卡配置信息失败',
   repeat: true,
-  cover: false
+  cover: false,
+  method: 'post'
 });
 
 export const getPersonList = request2.temp(getPersonListUrl, {
