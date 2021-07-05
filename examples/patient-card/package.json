@@ -1,0 +1,19 @@
+{
+  "name": "patient-card",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "winex fire start"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@winfe/winex-cli": "^1.0.19",
+    "core-js": "^3.15.2",
+    "sass": "^1.35.1",
+    "sass-loader": "^10"
+  },
+  "dependencies": {
+    "@winning-plugin/portal-login-plugin": "^1.1.4",
+    "element-ui": "^2.15.3"
+  }
+}

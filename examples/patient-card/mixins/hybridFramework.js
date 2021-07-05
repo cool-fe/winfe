@@ -1,8 +1,10 @@
 // import Request from 'his-request'
-import { readcard } from 'winning-dll';
+// import { readcard } from 'winning-dll';
 // eslint-disable-next-line node/no-unpublished-import
 import Request from '../../../packages/win-request';
 import * as commonMix from './commonMix';
+
+const readcard = Promise.resolve();
 
 const { user } = Request.getCookieData();
 

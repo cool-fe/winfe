@@ -143,7 +143,8 @@ export default class Request {
         {
           url,
           method,
-          ...options,
+          //@ts-ignore
+          options,
           [method === 'post' ? 'data' : 'params']: data
         },
         options
