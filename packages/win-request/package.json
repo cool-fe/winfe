@@ -1,6 +1,6 @@
 {
   "name": "@winfe/win-request",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "scripts": {},
   "engines": {
     "node": ">=12.0.0",
