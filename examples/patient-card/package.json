@@ -7,14 +7,13 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@winfe/winex-cli": "^1.0.19",
+    "@winfe/winex-cli": "^1.0.20",
     "sass": "^1.35.1",
     "sass-loader": "^10",
     "element-ui": "^2.15.3",
     "@winning-plugin/portal-login-plugin": "^1.1.4"
   },
   "dependencies": {
-    "element-ui": "^2.15.3",
-    "core-js": "^3.15.2"
+    "element-ui": "^2.15.3"
   }
 }

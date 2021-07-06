@@ -87,5 +87,6 @@ module.exports = {
       changeOrigin: true,
       target: 'http://172.16.6.43'
     }
-  }
+  },
+  chainWebpack() {}
 };

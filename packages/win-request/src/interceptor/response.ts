@@ -1,16 +1,25 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 
-import { pendingRequest, handleError } from '../util';
+import { pendingRequest, handleError, showSuccessMessage } from '../util';
 
-// 响应拦截
 const responseInterceptor = (service: AxiosInstance): void => {
   service.interceptors.response.use(
     (res) => {
       const { config } = res;
-      //@ts-ignore
-      pendingRequest.delete(config.storeUrl || '');
-      return res.data;
+      const { successTxt, warning, message, url } = config;
+      if (res.success && successTxt && message) {
+        // 接口成功且配置了成功文案
+        showSuccessMessage(message, config);
+        return res;
+      } else {
+        // 接口失败且允许自动报错
+        if (warning) {
+          res.errorDetail.id = res.traceid;
+          res.errorDetail.path = url;
+        }
+        return Promise.reject(res);
+      }
     },
     (err) => {
       // 判断请求是否被取消
@@ -20,8 +29,8 @@ const responseInterceptor = (service: AxiosInstance): void => {
       }
       const { config } = err;
       // 删除pendingRequest 中的存储
-      if (config && pendingRequest.has(config.storeUrl)) {
-        pendingRequest.delete(config.storeUrl);
+      if (config && pendingRequest.has(config.url)) {
+        pendingRequest.delete(config.url);
       }
       handleError(err);
       return Promise.reject({

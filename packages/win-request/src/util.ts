@@ -1,25 +1,8 @@
 import Cookie from 'js-cookie';
+import type { Canceler, AxiosError, AxiosRequestConfig } from 'axios';
 
 export interface CookieData {
   [key: string]: string | undefined;
-}
-
-export interface ErrorInfoStructure {
-  success: boolean; // if request is success
-  data?: unknown; // response data
-  errorCode?: string; // code for errorType
-  errorMessage?: string; // message display to user
-  showType?: number; // error display type： 0 silent; 1 message.warn; 2 message.error; 4 notification; 9 page
-  traceId?: string; // Convenient for back-end Troubleshooting: unique request ID
-  host?: string; // onvenient for backend Troubleshooting: host of current access server
-  detailMsg?: string;
-  message?: string;
-  type: string;
-  path: string;
-  id: string;
-  stack?: string[];
-  code: string;
-  response: any;
 }
 
 const cookieExternals = {
@@ -103,7 +86,14 @@ export function getCookieData(): typeof COOKIE_DATA {
 }
 
 // 存储pending 状态请求
-export const pendingRequest: Map<string, any> = new Map();
+export const pendingRequest: Map<
+  string,
+  {
+    cancelFn: Canceler;
+    data: unknown;
+    global: boolean;
+  }
+> = new Map();
 
 /**
  * 刷新请求头信息
@@ -124,7 +114,7 @@ export function refreshCookieData(): typeof COOKIE_DATA {
  * 清除所有pending状态的请求
  * @param {Array} whileList 白名单，里面的请求不会被取消
  */
-export function clearPendingRequest(whiteList: string[] = []): string[] | undefined {
+export function clearPendingRequest(whiteList: string[] = []): void {
   if (!pendingRequest.size) return;
   const pendingUrlList = Array.from(pendingRequest.keys()).filter((url) => {
     const cancelList = whiteList.find((whiteUrl) => url.indexOf(whiteUrl) !== -1);
@@ -133,21 +123,14 @@ export function clearPendingRequest(whiteList: string[] = []): string[] | undefi
   if (!pendingUrlList.length) return;
   pendingUrlList.forEach((pendingUrl) => {
     // 清除掉所有非全局的pending状态下的请求
-    if (!pendingRequest.get(pendingUrl).global) {
-      pendingRequest.get(pendingUrl).cancelFn('');
+    const result = pendingRequest.get(pendingUrl);
+    if (result && !result.global) {
+      result.cancelFn('');
       pendingRequest.delete(pendingUrl);
     }
   });
-  // eslint-disable-next-line consistent-return
-  return pendingUrlList;
 }
 
-interface ErrorMessageOptions {
-  successTxt?: string;
-  failTxt?: string;
-  showDetail?: boolean;
-  duration?: number;
-}
 export type MessageInstance = (options: unknown) => unknown;
 
 /**
@@ -159,37 +142,31 @@ export type MessageInstance = (options: unknown) => unknown;
  * @param {Boolean} options.showDetail 是否展示错误详情
  * @param {Boolean} options.showClose 是否展示关闭按钮
  */
-export const showErrMessage = (
-  message: MessageInstance,
-  err: ErrorInfoStructure,
-  options: ErrorMessageOptions = {}
-): void => {
+export const showErrMessage = (message: MessageInstance, err: AxiosError): void => {
   if (!err) return;
-  const { detailMsg } = err;
+  const { config, message: msg, response } = err;
+  const { failTxt = '', showDetail, url, timeout } = config;
   message({
-    message: err.message || options.failTxt,
+    message: msg || failTxt,
     type: err.type || 'error',
-    showDetail: options.showDetail !== false,
-    errorUrl: err.path || null,
-    detailMsg: detailMsg || null,
-    traceid: err.id || null,
-    duration: options.duration || 5000
+    showDetail: showDetail !== false,
+    errorUrl: url || null,
+    detailMsg: response?.errorDetail || null,
+    traceid: response?.traceid || null,
+    duration: timeout || 5000
   });
 };
 
-export const showSuccessMessage = (
-  message: MessageInstance,
-  options: ErrorMessageOptions
-): void => {
+export const showSuccessMessage = (message: MessageInstance, config: AxiosRequestConfig): void => {
   message({
-    message: options.successTxt,
+    message: config.successTxt,
     type: 'success',
-    duration: options.duration || 5000
+    duration: config.timeout || 5000
   });
 };
 
 // eslint-disable-next-line complexity
-export const handleError = (err: ErrorInfoStructure): ErrorInfoStructure => {
+export const handleError = (err: AxiosError): AxiosError => {
   if (err.stack && err.stack.includes('timeout')) {
     err.message = '请求超时!';
   }
@@ -232,7 +209,7 @@ export const handleError = (err: ErrorInfoStructure): ErrorInfoStructure => {
       err.message = '网络超时(504)';
       break;
     default:
-      err.message = `连接出错，状态码：(${err.response.status})!`;
+      err.message = `连接出错，状态码：(${err.response?.status})!`;
   }
   return err;
 };

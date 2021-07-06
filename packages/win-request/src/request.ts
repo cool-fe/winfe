@@ -5,7 +5,6 @@ import {
   getCookieData as getCookieDataUtil,
   showErrMessage,
   clearPendingRequest,
-  showSuccessMessage,
   noop
 } from './util';
 
@@ -14,60 +13,57 @@ import type { COOKIE_DATA, MessageInstance } from './util';
 import requestInterceptor from './interceptor/request';
 import responseInterceptor from './interceptor/response';
 
-interface IRequestArgvOptions {
-  message: null;
-  baseUrl?: string;
-  baseURL?: string;
-}
-
-interface IRequestOpts {
-  baseURL?: string;
-  method: string;
-  warning: boolean;
-  cover: boolean;
-  login: boolean;
-  checkWarning: boolean;
-  repeat: boolean;
-  isAddHospitalSoid: boolean;
-}
-
 declare module 'axios' {
   export interface AxiosResponse {
-    success: boolean; // if request is success
+    success: boolean;
     traceid: string;
     errorDetail: {
       id: string;
       path?: string;
+      detailMsg?: string;
+      fixMsg?: string;
+      ipAddress?: string;
+      message?: string;
+      original?: string;
     };
+    appid: string;
+    hostip: string;
+  }
+
+  export interface AxiosError {
+    stack?: unknown[];
+    type?: string;
+  }
+
+  export interface AxiosRequestConfig {
+    successTxt?: string;
+    failTxt?: string;
+    warning?: boolean;
+    cover?: boolean;
+    repeat?: boolean;
+    isAddHospitalSoid?: boolean;
+    isAddSoid?: boolean;
+    baseUrl?: string;
+    message?: MessageInstance;
+    global?: boolean;
+    checkFn?: (data: unknown) => boolean;
+    transformData?: (data: unknown) => unknown;
+    errorHandler?: (error: AxiosError) => void;
+    showDetail?: boolean;
   }
 }
 
-/**
- * @options { Object } 类Request 入参
- *
- */
 export default class Request {
   service: AxiosInstance;
 
-  message: MessageInstance;
-
-  options: IRequestOpts | IRequestArgvOptions;
-
-  constructor(options: IRequestArgvOptions) {
+  constructor(options: AxiosRequestConfig = {}) {
+    const { baseURL, baseUrl, timeout, message, ...rest } = options;
     this.service = axios.create({
-      baseURL: options.baseURL || options.baseUrl || '',
-      timeout: 100000
+      baseURL: baseURL || baseUrl || '',
+      timeout: timeout || 100000,
+      message: message || noop,
+      ...rest
     });
-    this.message = options.message || noop;
-    this.options = {
-      warning: true,
-      cover: true,
-      login: true,
-      checkWarning: true,
-      repeat: false,
-      isAddHospitalSoid: true,
-      ...options
-    };
     this.temp = this.temp.bind(this);
     this.generate = this.generate.bind(this);
     requestInterceptor(this.service);
@@ -79,76 +75,50 @@ export default class Request {
   }
 
   get getCookieData(): typeof Request.getCookieData {
-    console.log('deprate');
+    console.log(
+      'getCookieData has been deprecated and will be removed in next, please use js-cookie instead'
+    );
     return this.getCookieData;
   }
 
   // 清除请求
-  static clear(whiteList: string[] = []): string[] | undefined {
-    return clearPendingRequest(whiteList);
-  }
-
-  get clear(): typeof Request.clear {
-    console.log('deprate');
-    return this.clear;
-  }
-
-  static async asyncClear(whiteList: string[] = []): Promise<void> {
+  static clear(whiteList: string[] = []): void {
     clearPendingRequest(whiteList);
   }
 
-  get asyncClear(): typeof Request.asyncClear {
-    console.log('deprate');
-    return this.asyncClear;
+  clear(): typeof Request.clear {
+    console.log('clear has been deprecated and will be removed in next');
+    return this.clear;
   }
 
-  generate(data: AxiosRequestConfig, options: any): AxiosPromise<any> {
-    return this.service(data)
-      .then((res) => {
-        const { successTxt, warning } = options;
-        if (res.success && successTxt) {
-          // 接口成功且配置了成功文案
-          showSuccessMessage(this.message, options);
-          return res;
-        } else {
-          // 接口失败且允许自动报错
-          if (warning) {
-            res.errorDetail.id = res.traceid;
-            res.errorDetail.path = data.url;
-          }
-          return Promise.reject(res);
+  generate(data: AxiosRequestConfig): AxiosPromise<unknown> {
+    return this.service(data).catch((err) => {
+      // 接口请求中发生未知错误
+      const { config } = err;
+      const { errorDetail, warning } = config;
+      if (warning && errorDetail && errorDetail.message) {
+        try {
+          console.log(`接口报错`);
+        } catch (error) {
+          console.log(`接口报错`, error);
         }
-      })
-      .catch((err) => {
-        // 接口请求中发生未知错误
-        const { errorDetail } = err;
-        if (options.warning && errorDetail && errorDetail.message) {
-          try {
-            console.log(`接口报错`);
-          } catch (error) {
-            console.log(`接口报错`, error);
-          }
 
-          showErrMessage(this.message, errorDetail, options);
-        }
-        return Promise.reject(err);
-      });
+        showErrMessage(config.message, err);
+      }
+      return Promise.reject(err);
+    });
   }
 
   temp(url: string, config: AxiosRequestConfig = {}) {
-    return (data: any, customer: any) => {
-      const options: AxiosRequestConfig = { ...this.options, ...config, ...customer };
+    return (data: unknown, customer: AxiosRequestConfig): AxiosPromise<unknown> => {
+      const options: AxiosRequestConfig = { ...config, ...customer };
       const { method } = options;
-      return this.generate(
-        {
-          url,
-          method,
-          //@ts-ignore
-          options,
-          [method === 'post' ? 'data' : 'params']: data
-        },
-        options
-      );
+      return this.generate({
+        url,
+        method,
+        [method === 'post' ? 'data' : 'params']: data,
+        ...options
+      });
     };
   }
 }

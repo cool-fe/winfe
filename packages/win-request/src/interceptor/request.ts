@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { AxiosRequestConfig, AxiosInstance } from 'axios';
+import type { AxiosRequestConfig, AxiosInstance, Canceler } from 'axios';
 import isEqual from 'lodash/isEqual';
 
 import { pendingRequest, refreshCookieData } from '../util';
@@ -12,82 +12,78 @@ export function requestHosiptalSoid(
   config: AxiosRequestConfig,
   user: CookieData
 ): AxiosRequestConfig {
-  //@ts-ignore
-  if (config.options) {
-    //@ts-ignore
-    const { isAddHospitalSoid, isAddSoid } = config.options;
-    config.data = config.data || {};
-    if (isAddHospitalSoid || isAddSoid) {
-      config.data.hospitalSOID = user.hospitalSOID;
-    }
+  const { isAddHospitalSoid, isAddSoid } = config;
+  if (isAddHospitalSoid || isAddSoid) {
+    config.data.hospitalSOID = user.hospitalSOID;
   }
   return config;
 }
 
-// 请求拦截，添加请求头信息
 export function requestHeader(
   config: AxiosRequestConfig,
-  headerData: any = {}
+  headerData: Record<string, unknown> = {}
 ): AxiosRequestConfig {
   // 添加系统参数
   config.headers.common = Object.assign(config.headers.common, headerData);
   return config;
 }
 
-// 请求拦截，防止重复请求
-export function requestCancel(config: any) {
-  const { options } = config;
+export function requestCancel(config: AxiosRequestConfig): AxiosRequestConfig {
   // 添加pending
-  function setPendingRequest(url: string, cancelFn: any) {
-    config.storeUrl = url;
+  function setPendingRequest(url: string, cancelFn: Canceler) {
     pendingRequest.set(url, {
       cancelFn,
       data: config.data,
-      global: options.global || false
+      global: config.global || false
     });
   }
   // eslint-disable-next-line consistent-return
-  config.cancelToken = new CancelToken((cancelFn) => {
-    const target = pendingRequest.get(config.url);
-    /* url非重复情况 */
-    if (!target) {
-      setPendingRequest(config.url, cancelFn);
-      return config;
-    }
-    /* url重复 */
-    // 覆盖之前的请求
-    if (options.cover) {
-      target.cancelFn('');
-      setPendingRequest(config.url, cancelFn);
-      return config;
-    }
-    // 允许重复
-    if (options.repeat) {
-      const repeatList = Array.from(pendingRequest.keys()).filter(
-        (url) => url.indexOf(config.url) !== -1
-      );
-      setPendingRequest(`repeat_${repeatList.length}:${config.url}`, cancelFn);
-      return config;
-    }
-    // 不允许重复则取消该请求
-    if (isEqual(target.data, config.data)) {
-      //@ts-ignore
-      cancelFn({
-        config,
-        message: '请求重复',
-        url: config.url,
-        stack: `请求重复，入参：${JSON.stringify(config.data)}`
-      });
+  config.cancelToken = new CancelToken((cancelFn): void => {
+    if (typeof config.url === 'string') {
+      const target = pendingRequest.get(config.url);
+      /* url非重复情况 */
+      if (!target) {
+        setPendingRequest(config.url, cancelFn);
+        return;
+      }
+
+      /* url重复 */
+      // 覆盖之前的请求
+      if (config.cover) {
+        target.cancelFn('');
+        setPendingRequest(config.url, cancelFn);
+        return;
+      }
+
+      // 允许重复
+      if (config.repeat) {
+        const repeatList = Array.from(pendingRequest.keys()).filter(
+          (url) => url.indexOf(config.url as string) !== -1
+        );
+        setPendingRequest(`repeat_${repeatList.length}:${config.url}`, cancelFn);
+        return;
+      }
+
+      // 不允许重复则取消该请求
+      if (isEqual(target.data, config.data)) {
+        cancelFn(
+          JSON.stringify({
+            config,
+            message: '请求重复',
+            url: config.url,
+            stack: `请求重复，入参：${JSON.stringify(config.data)}`
+          })
+        );
+      }
     }
   });
   return config;
 }
 
 // 转换request data
-export function requestTransform(config: any): AxiosRequestConfig {
-  const {
-    options: { transformData }
-  } = config;
+// TODO 这个可以让业务直接利用拦截器处理，但是如果单个接口需要转换怎么处理？
+export function requestTransform(config: AxiosRequestConfig): AxiosRequestConfig {
+  const { transformData } = config;
   if (transformData) {
     config.data = transformData(config.data);
   }
@@ -95,19 +91,21 @@ export function requestTransform(config: any): AxiosRequestConfig {
 }
 
 // check 接口入参data是否合法
-export function requestCheckData(config: any): AxiosRequestConfig {
-  const {
-    options: { checkFn }
-  } = config;
+// TODO 没必要传递一个checkFn参数检查参数是否合法，直接利用自定义拦截器处理
+export function requestCheckData(config: AxiosRequestConfig): AxiosRequestConfig {
+  const { checkFn } = config;
+  if (!config.url) return config;
   const message = checkFn ? checkFn(config.data) : null;
   // 不通过 则取消该请求
   if (message) {
-    const target = pendingRequest.get(config.storeUrl || config.url);
+    const target = pendingRequest.get(config.url);
     if (target) {
-      target.cancelFn({
-        config,
-        message
-      });
+      target.cancelFn(
+        JSON.stringify({
+          config,
+          message
+        })
+      );
     }
   }
   return config;
