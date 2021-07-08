@@ -24,8 +24,11 @@ const responseInterceptor = (service: AxiosInstance): void => {
     (err) => {
       // 判断请求是否被取消
       if (axios.isCancel(err)) {
-        // eslint-disable-next-line no-param-reassign
-        err = err.message;
+        try {
+          // eslint-disable-next-line no-param-reassign
+          err = JSON.parse(err.message);
+          // eslint-disable-next-line no-empty
+        } catch (error) {}
       }
       const { config } = err;
       // 删除pendingRequest 中的存储

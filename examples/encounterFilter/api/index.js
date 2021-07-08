@@ -6,6 +6,8 @@ import * as url from './url-constants';
 
 const filterReq = new Request({});
 
+Request.clear();
+
 const req = function req(arg, name) {
   return new Promise((resolve, reject) => {
     filterReq.service

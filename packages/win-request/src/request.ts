@@ -71,24 +71,18 @@ export default class Request {
   }
 
   static getCookieData(): typeof COOKIE_DATA {
-    return getCookieDataUtil();
-  }
-
-  get getCookieData(): typeof Request.getCookieData {
     console.log(
-      'getCookieData has been deprecated and will be removed in next, please use js-cookie instead'
+      '[win-request]  API static  getCookieData() has been deprecated and will be removed in next, please use js-cookie instead'
     );
-    return this.getCookieData;
+    return getCookieDataUtil();
   }
 
   // 清除请求
   static clear(whiteList: string[] = []): void {
+    console.warn(
+      '[win-request] API static clear() has been deprecated and will be removed in next'
+    );
     clearPendingRequest(whiteList);
-  }
-
-  clear(): typeof Request.clear {
-    console.log('clear has been deprecated and will be removed in next');
-    return this.clear;
   }
 
   generate(data: AxiosRequestConfig): AxiosPromise<unknown> {
@@ -109,7 +103,13 @@ export default class Request {
     });
   }
 
-  temp(url: string, config: AxiosRequestConfig = {}) {
+  temp(
+    url: string,
+    config: AxiosRequestConfig = {}
+  ): (data: unknown, customer: AxiosRequestConfig) => AxiosPromise<unknown> {
+    console.log(
+      '[win-request]  API temp() will be deprecated and will be removed in next, please use API service() instead'
+    );
     return (data: unknown, customer: AxiosRequestConfig): AxiosPromise<unknown> => {
       const options: AxiosRequestConfig = { ...config, ...customer };
       const { method } = options;
