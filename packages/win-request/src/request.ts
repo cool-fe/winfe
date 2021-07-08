@@ -1,6 +1,8 @@
 import axios from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosPromise } from 'axios';
 
+import { Message } from 'element-ui';
+
 import {
   getCookieData as getCookieDataUtil,
   showErrMessage,
@@ -8,7 +10,7 @@ import {
   noop
 } from './util';
 
-import type { COOKIE_DATA, MessageInstance } from './util';
+import type { COOKIE_DATA, MessageInstance, ErrorDetail } from './util';
 
 import requestInterceptor from './interceptor/request';
 import responseInterceptor from './interceptor/response';
@@ -17,22 +19,14 @@ declare module 'axios' {
   export interface AxiosResponse {
     success: boolean;
     traceid: string;
-    errorDetail: {
-      id: string;
-      path?: string;
-      detailMsg?: string;
-      fixMsg?: string;
-      ipAddress?: string;
-      message?: string;
-      original?: string;
-    };
+    errorDetail: ErrorDetail;
     appid: string;
     hostip: string;
   }
 
   export interface AxiosError {
     stack?: unknown[];
-    type?: string;
+    type: 'success' | 'warning' | 'info' | 'error';
   }
 
   export interface AxiosRequestConfig {
@@ -44,7 +38,7 @@ declare module 'axios' {
     isAddHospitalSoid?: boolean;
     isAddSoid?: boolean;
     baseUrl?: string;
-    message?: MessageInstance;
+    message: MessageInstance;
     global?: boolean;
     checkFn?: (data: unknown) => boolean;
     transformData?: (data: unknown) => unknown;
@@ -56,7 +50,7 @@ declare module 'axios' {
 export default class Request {
   service: AxiosInstance;
 
-  constructor(options: AxiosRequestConfig = {}) {
+  constructor(options: AxiosRequestConfig = { message: Message }) {
     const { baseURL, baseUrl, timeout, message, ...rest } = options;
     this.service = axios.create({
       baseURL: baseURL || baseUrl || '',

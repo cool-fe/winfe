@@ -1,5 +1,25 @@
 import Cookie from 'js-cookie';
 import type { Canceler, AxiosError, AxiosRequestConfig } from 'axios';
+import type { Message } from 'element-ui';
+
+export interface ErrorDetail {
+  id: string;
+  path?: string;
+  detailMsg?: string;
+  fixMsg?: string;
+  ipAddress?: string;
+  message?: string;
+  original?: string;
+}
+
+declare module 'element-ui/types/message' {
+  export interface ElMessageOptions {
+    showDetail?: boolean;
+    errorUrl?: string;
+    detailMsg?: ErrorDetail;
+    traceid?: string;
+  }
+}
 
 export interface CookieData {
   [key: string]: string | undefined;
@@ -131,7 +151,7 @@ export function clearPendingRequest(whiteList: string[] = []): void {
   });
 }
 
-export type MessageInstance = (options: unknown) => unknown;
+export type MessageInstance = typeof Message;
 
 /**
  *
@@ -150,9 +170,9 @@ export const showErrMessage = (message: MessageInstance, err: AxiosError): void 
     message: msg || failTxt,
     type: err.type || 'error',
     showDetail: showDetail !== false,
-    errorUrl: url || null,
-    detailMsg: response?.errorDetail || null,
-    traceid: response?.traceid || null,
+    errorUrl: url,
+    detailMsg: response?.errorDetail,
+    traceid: response?.traceid,
     duration: timeout || 5000
   });
 };
