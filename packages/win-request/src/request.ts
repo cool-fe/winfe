@@ -38,7 +38,7 @@ declare module 'axios' {
     isAddHospitalSoid?: boolean;
     isAddSoid?: boolean;
     baseUrl?: string;
-    message: MessageInstance;
+    message?: MessageInstance;
     global?: boolean;
     checkFn?: (data: unknown) => boolean;
     transformData?: (data: unknown) => unknown;
@@ -55,7 +55,7 @@ export default class Request {
     this.service = axios.create({
       baseURL: baseURL || baseUrl || '',
       timeout: timeout || 100000,
-      message: message || noop,
+      message: message || Message,
       ...rest
     });
     this.temp = this.temp.bind(this);
