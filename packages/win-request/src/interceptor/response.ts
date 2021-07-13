@@ -6,6 +6,8 @@ import { pendingRequest, handleError, showSuccessMessage } from '../util';
 const responseInterceptor = (service: AxiosInstance): void => {
   service.interceptors.response.use(
     (res) => {
+      // Any status code that lie within the range of 2xx cause this function to trigger
+      // Do something with response data
       const { config } = res;
       const { successTxt, warning, message, url } = config;
       if (res.success && successTxt && message) {
@@ -22,6 +24,8 @@ const responseInterceptor = (service: AxiosInstance): void => {
       }
     },
     (err) => {
+      // Any status codes that falls outside the range of 2xx cause this function to trigger
+      // Do something with response error
       // 判断请求是否被取消
       if (axios.isCancel(err)) {
         try {

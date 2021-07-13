@@ -16,7 +16,7 @@ declare module 'element-ui/types/message' {
   export interface ElMessageOptions {
     showDetail?: boolean;
     errorUrl?: string;
-    detailMsg?: ErrorDetail;
+    errorDetail?: ErrorDetail;
     traceid?: string;
   }
 }
@@ -153,15 +153,6 @@ export function clearPendingRequest(whiteList: string[] = []): void {
 
 export type MessageInstance = typeof Message;
 
-/**
- *
- * @param {Function} message 消息弹窗方法
- * @param {Object} err 错误信息对象
- * @param {String} err.message 错误提示信息
- * @param {Object} options 消息弹窗配置对象
- * @param {Boolean} options.showDetail 是否展示错误详情
- * @param {Boolean} options.showClose 是否展示关闭按钮
- */
 export const showErrMessage = (message: MessageInstance, err: AxiosError): void => {
   if (!err) return;
   const { config, message: msg, response } = err;
@@ -171,7 +162,7 @@ export const showErrMessage = (message: MessageInstance, err: AxiosError): void 
     type: err.type || 'error',
     showDetail: showDetail !== false,
     errorUrl: url,
-    detailMsg: response?.errorDetail,
+    errorDetail: response?.errorDetail,
     traceid: response?.traceid,
     duration: timeout || 5000
   });

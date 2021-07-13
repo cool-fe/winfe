@@ -3,12 +3,7 @@ import type { AxiosInstance, AxiosRequestConfig, AxiosPromise } from 'axios';
 
 import { Message } from 'element-ui';
 
-import {
-  getCookieData as getCookieDataUtil,
-  showErrMessage,
-  clearPendingRequest,
-  noop
-} from './util';
+import { getCookieData as getCookieDataUtil, showErrMessage, clearPendingRequest } from './util';
 
 import type { COOKIE_DATA, MessageInstance, ErrorDetail } from './util';
 
@@ -81,7 +76,9 @@ export default class Request {
 
   generate(data: AxiosRequestConfig): AxiosPromise<unknown> {
     return this.service(data).catch((err) => {
-      // 接口请求中发生未知错误
+      // if err.response则表示请求有返回，status超出 2xx 的范围
+      // else if error.request 请求没有返回
+      // else 接口请求中发生未知错误
       const { config } = err;
       const { errorDetail, warning } = config;
       if (warning && errorDetail && errorDetail.message) {
@@ -106,6 +103,7 @@ export default class Request {
     );
     return (data: unknown, customer: AxiosRequestConfig): AxiosPromise<unknown> => {
       const options: AxiosRequestConfig = { ...config, ...customer };
+      if (options.method === undefined) options.method = 'post'; // 处理默认的method，卫宁内部有效
       const { method } = options;
       return this.generate({
         url,
