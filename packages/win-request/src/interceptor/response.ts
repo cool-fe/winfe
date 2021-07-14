@@ -12,9 +12,11 @@ const responseInterceptor = (service: AxiosInstance): void => {
       // Do something with response data
       const { config, data } = res;
       const { successTxt, warning, message, url } = config;
-      if (data && data.success && successTxt && message) {
-        // 接口成功且配置了成功文案
-        showSuccessMessage(message, config);
+      if (data && data.success) {
+        if (message && successTxt) {
+          // 接口成功且配置了成功文案
+          showSuccessMessage(message, config);
+        }
         return res;
       } else {
         // 接口失败且允许自动报错
