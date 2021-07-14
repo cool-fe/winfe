@@ -21,7 +21,6 @@ export interface ResponseData {
 declare module 'axios' {
   export interface AxiosError {
     stack?: unknown[];
-    type: 'success' | 'warning' | 'info' | 'error';
   }
 
   export interface AxiosRequestConfig {
@@ -39,6 +38,7 @@ declare module 'axios' {
     transformData?: (data: unknown) => unknown;
     errorHandler?: (error: AxiosError) => void;
     showDetail?: boolean;
+    showType?: 'success' | 'warning' | 'info' | 'error';
   }
 }
 
@@ -75,7 +75,7 @@ export default class Request {
   }
 
   generate(data: AxiosRequestConfig): AxiosPromise<ResponseData> {
-    return this.service(data).catch((err) => {
+    return (this.service(data) as AxiosPromise<ResponseData>).catch((err) => {
       // if err.response则表示请求有返回，status超出 2xx 的范围
       // else if error.request 请求没有返回
       // else 接口请求中发生未知错误

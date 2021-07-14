@@ -156,10 +156,10 @@ export type MessageInstance = typeof Message;
 export const showErrMessage = (message: MessageInstance, err: AxiosError): void => {
   if (!err) return;
   const { config, message: msg, response } = err;
-  const { failTxt = '', showDetail, url, timeout } = config;
+  const { failTxt = '', showDetail, url, timeout, showType } = config;
   message({
     message: msg || failTxt,
-    type: err.type || 'error',
+    type: showType || 'error',
     showDetail: showDetail !== false,
     errorUrl: url,
     errorDetail: response?.data?.errorDetail,
