@@ -162,8 +162,8 @@ export const showErrMessage = (message: MessageInstance, err: AxiosError): void 
     type: err.type || 'error',
     showDetail: showDetail !== false,
     errorUrl: url,
-    errorDetail: response?.errorDetail,
-    traceid: response?.traceid,
+    errorDetail: response?.data?.errorDetail,
+    traceid: response?.data?.traceid,
     duration: timeout || 5000
   });
 };
