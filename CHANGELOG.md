@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.28 (2021-07-14)
+
+
+### Features
+
+* add dataField & errorField ([040fc01](https://github.com/cool-fe/winfe/commit/040fc014403d3064b85a53440e018f1b39c8a218))
+
+
+
+
+
 ## 1.0.27 (2021-07-14)
 
 
