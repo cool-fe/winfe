@@ -6,6 +6,14 @@ import * as url from './url-constants';
 
 const filterReq = new Request({});
 
+const ddd = filterReq.temp('http://localhost:8080/', {
+  successTxt: 'ddd'
+})(null, {
+  successTxt: 678
+});
+
+console.log(999, ddd);
+
 Request.clear();
 
 const req = function req(arg, name) {

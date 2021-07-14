@@ -1,24 +1,26 @@
 import axios from 'axios';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance, AxiosResponse } from 'axios';
+
+import type { ResponseData } from '../request';
 
 import { pendingRequest, handleError, showSuccessMessage } from '../util';
 
 const responseInterceptor = (service: AxiosInstance): void => {
   service.interceptors.response.use(
-    (res) => {
+    (res: AxiosResponse<ResponseData>) => {
       // Any status code that lie within the range of 2xx cause this function to trigger
       // Do something with response data
-      const { config } = res;
+      const { config, data } = res;
       const { successTxt, warning, message, url } = config;
-      if (res.success && successTxt && message) {
+      if (data && data.success && successTxt && message) {
         // 接口成功且配置了成功文案
         showSuccessMessage(message, config);
         return res;
       } else {
         // 接口失败且允许自动报错
         if (warning) {
-          res.errorDetail.id = res.traceid;
-          res.errorDetail.path = url;
+          data.errorDetail.id = (data || {}).traceid;
+          data.errorDetail.path = url;
         }
         return Promise.reject(res);
       }
@@ -41,11 +43,14 @@ const responseInterceptor = (service: AxiosInstance): void => {
       }
       handleError(err);
       return Promise.reject({
-        success: false,
-        errorDetail: {
-          path: config ? config.url : err.url || '',
-          detailMsg: err.stack,
-          message: err.message
+        ...err,
+        data: {
+          success: false,
+          errorDetail: {
+            path: config ? config.url : err.url || '',
+            detailMsg: err.stack,
+            message: err.message
+          }
         }
       });
     }
