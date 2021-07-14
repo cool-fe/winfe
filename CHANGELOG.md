@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.27 (2021-07-14)
+
+
+### Bug Fixes
+
+* response inter ([ca8e5d6](https://github.com/cool-fe/winfe/commit/ca8e5d667456b87960bffdb3d43ac6e4aabaa2f2))
+
+
+
+
+
 ## 1.0.26 (2021-07-14)
 
 **Note:** Version bump only for package @winfe/win
