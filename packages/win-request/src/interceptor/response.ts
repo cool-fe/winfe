@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosResponse } from 'axios';
 
 import type { ResponseData } from '../request';
@@ -17,7 +17,7 @@ const responseInterceptor = (service: AxiosInstance): void => {
           // 接口成功且配置了成功文案
           showSuccessMessage(message, config);
         }
-        return res;
+        return typeof config.dataField === 'string' ? res[config.dataField] : res;
       } else {
         // 接口失败且允许自动报错
         if (warning) {
@@ -27,7 +27,7 @@ const responseInterceptor = (service: AxiosInstance): void => {
         return Promise.reject(res);
       }
     },
-    (err) => {
+    (err: AxiosError<ResponseData>) => {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
       // 判断请求是否被取消
@@ -40,8 +40,8 @@ const responseInterceptor = (service: AxiosInstance): void => {
       }
       const { config } = err;
       // 删除pendingRequest 中的存储
-      if (config && pendingRequest.has(config.url)) {
-        pendingRequest.delete(config.url);
+      if (config && pendingRequest.has(config.url || '')) {
+        pendingRequest.delete(config.url || '');
       }
       handleError(err);
       return Promise.reject({

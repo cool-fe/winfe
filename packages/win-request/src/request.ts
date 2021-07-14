@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { AxiosInstance, AxiosRequestConfig, AxiosPromise } from 'axios';
+import type { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosError } from 'axios';
 
 import { Message } from 'element-ui';
 
@@ -21,6 +21,7 @@ export interface ResponseData {
 declare module 'axios' {
   export interface AxiosError {
     stack?: unknown[];
+    url?: string;
   }
 
   export interface AxiosRequestConfig {
@@ -39,6 +40,8 @@ declare module 'axios' {
     errorHandler?: (error: AxiosError) => void;
     showDetail?: boolean;
     showType?: 'success' | 'warning' | 'info' | 'error';
+    dataField?: string;
+    errorField?: string;
   }
 }
 
@@ -46,11 +49,21 @@ export default class Request {
   service: AxiosInstance;
 
   constructor(options: AxiosRequestConfig = { message: Message }) {
-    const { baseURL, baseUrl, timeout, message, ...rest } = options;
+    const {
+      baseURL,
+      baseUrl,
+      timeout,
+      message,
+      dataField = 'data',
+      errorField = 'response',
+      ...rest
+    } = options;
     this.service = axios.create({
       baseURL: baseURL || baseUrl || '',
       timeout: timeout || 3000,
       message: message || Message,
+      dataField,
+      errorField,
       ...rest
     });
     this.temp = this.temp.bind(this);
@@ -75,25 +88,26 @@ export default class Request {
   }
 
   generate(data: AxiosRequestConfig): AxiosPromise<ResponseData> {
-    return (this.service(data) as AxiosPromise<ResponseData>).catch((err) => {
-      // if err.response则表示请求有返回，status超出 2xx 的范围
-      // else if error.request 请求没有返回
-      // else 接口请求中发生未知错误
-      const { config, data: response } = err;
-      const { warning } = config;
-      const { errorDetail } = response || {};
+    return (this.service(data) as AxiosPromise<ResponseData>).catch(
+      (err: AxiosError<ResponseData>) => {
+        // if err.response则表示请求有返回，status超出 2xx 的范围
+        // else if error.request 请求没有返回
+        // else 接口请求中发生未知错误
+        const { config, response } = err;
+        const { warning } = config;
+        const { errorDetail } = (response || {}).data || {};
 
-      if (warning && errorDetail && errorDetail.message) {
-        try {
-          console.log(`接口报错`);
-        } catch (error) {
-          console.log(`接口报错`, error);
+        if (warning && errorDetail && errorDetail.message) {
+          try {
+            console.log(`接口报错`);
+          } catch (error) {
+            console.log(`接口报错`, error);
+          }
+          if (config.message) showErrMessage(config.message, err);
         }
-
-        showErrMessage(config.message, err);
+        return Promise.reject(typeof config.errorField === 'string' ? err[config.errorField] : err);
       }
-      return Promise.reject(err);
-    });
+    );
   }
 
   temp(
