@@ -87,28 +87,28 @@ export default class Request {
   }
 
   generate(data: AxiosRequestConfig): AxiosPromise<ResponseData> {
-    return (
-      this.service({ ...this.service.defaults, ...data }) as AxiosPromise<ResponseData>
-    ).catch((err: AxiosError<ResponseData>) => {
-      // if err.response则表示请求有返回，status超出 2xx 的范围
-      // else if error.request 请求没有返回
-      // else 接口请求中发生未知错误
-      const { config, response = { data: null } } = err;
-      const { warning } = config;
-      const { errorDetail } = response.data || {};
+    return (this.service(data) as AxiosPromise<ResponseData>).catch(
+      (err: AxiosError<ResponseData>) => {
+        // if err.response则表示请求有返回，status超出 2xx 的范围
+        // else if error.request 请求没有返回
+        // else 接口请求中发生未知错误
+        const { config, response = { data: null } } = err;
+        const { warning } = config;
+        const { errorDetail } = response.data || {};
 
-      if (warning && errorDetail && errorDetail.message) {
-        try {
-          console.log(`接口报错`);
-        } catch (error) {
-          console.log(`接口报错`, error);
+        if (warning && errorDetail && errorDetail.message) {
+          try {
+            console.log(`接口报错`);
+          } catch (error) {
+            console.log(`接口报错`, error);
+          }
+          if (config.message) showErrMessage(config.message, err);
         }
-        if (config.message) showErrMessage(config.message, err);
+        return Promise.reject(
+          typeof config.errorField === 'string' ? response[config.errorField] : response
+        );
       }
-      return Promise.reject(
-        typeof config.errorField === 'string' ? response[config.errorField] : response
-      );
-    });
+    );
   }
 
   temp(
