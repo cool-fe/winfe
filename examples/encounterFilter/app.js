@@ -6,7 +6,6 @@ export default ({ Vue }) => {
   if (process.env.NODE_ENV === 'development') {
     // eslint-disable-next-line node/no-unsupported-features/es-syntax
     import('@winning-plugin/portal-login-plugin').then((WinLogin) => {
-      console.log(8888, WinLogin);
       const Login = WinLogin.default;
       /* eslint-disable no-new */
       new Login({

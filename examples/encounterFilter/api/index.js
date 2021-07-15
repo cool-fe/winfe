@@ -4,17 +4,13 @@ import Request from '../../../packages/win-request';
 
 import * as url from './url-constants';
 
-console.log('Request', Request);
-
-const filterReq = new Request({});
-
-const ddd = filterReq.temp('http://localhost:8080/', {
-  successTxt: 'ddd'
-})(null, {
-  successTxt: 678
+const filterReq = new Request({
+  successTxt: 'gwj'
 });
 
-console.log(999, ddd);
+filterReq
+  .temp('http://localhost:8080/', {})()
+  .catch((res) => console.log(111, res));
 
 Request.clear();
 
