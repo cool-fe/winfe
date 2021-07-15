@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.31 (2021-07-15)
+
+
+### Bug Fixes
+
+* upgrade axios ([cf683d8](https://github.com/cool-fe/winfe/commit/cf683d82a2d638ea860ce4e6dc135365eacbf9ca))
+
+
+
+
+
 ## 1.0.30 (2021-07-15)
 
 **Note:** Version bump only for package @winfe/win
