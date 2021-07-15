@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.29 (2021-07-15)
+
+
+### Bug Fixes
+
+* timeout:100000 ([dd7a4c3](https://github.com/cool-fe/winfe/commit/dd7a4c31b581fe5cb10b97ead702994427eaaaad))
+
+
+
+
+
 ## 1.0.28 (2021-07-14)
 
 
