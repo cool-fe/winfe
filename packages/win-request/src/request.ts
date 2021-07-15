@@ -60,7 +60,7 @@ export default class Request {
     } = options;
     this.service = axios.create({
       baseURL: baseURL || baseUrl || '',
-      timeout: timeout || 3000,
+      timeout: timeout || 100000,
       message: message || Message,
       dataField,
       errorField,

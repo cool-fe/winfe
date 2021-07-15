@@ -7,7 +7,7 @@
     "browser": ">= 68"
   },
   "main": "dist/index.js",
-  "module": "es/index.js",
+  "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"

@@ -5,7 +5,8 @@ export default {
   umd: {
     file: 'win-request',
     minFile: true,
-    sourcemap: true
+    sourcemap: true,
+    globals: { axios: 'axios', 'element-ui': 'element-ui' }
   },
   runtimeHelpers: true,
   disableTypeCheck: false

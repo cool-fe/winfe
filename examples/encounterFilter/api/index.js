@@ -4,6 +4,8 @@ import Request from '../../../packages/win-request';
 
 import * as url from './url-constants';
 
+console.log('Request', Request);
+
 const filterReq = new Request({});
 
 const ddd = filterReq.temp('http://localhost:8080/', {
