@@ -38,23 +38,33 @@ const responseInterceptor = (service: AxiosInstance): void => {
           // eslint-disable-next-line no-empty
         } catch (error) {}
       }
-      const { config } = err;
+      const { config, response } = err;
+      const { data } = response || {};
       // 删除pendingRequest 中的存储
       if (config && pendingRequest.has(config.url || '')) {
         pendingRequest.delete(config.url || '');
       }
-      handleError(err);
-      return Promise.reject({
+
+      const errorData = {
         ...err,
-        data: {
-          success: false,
-          errorDetail: {
-            path: config ? config.url : err.url || '',
-            detailMsg: err.stack,
-            message: err.message
+        message: err.message,
+        stack: err.stack,
+        response: {
+          ...response,
+          data: {
+            success: false,
+            data,
+            errorDetail: {
+              path: config ? config.url : err.url || '',
+              detailMsg: err.stack,
+              message: err.message
+            }
           }
         }
-      });
+      };
+
+      handleError(err);
+      return Promise.reject(errorData);
     }
   );
 };
