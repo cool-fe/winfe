@@ -1,5 +1,5 @@
 {
-  "name": "win-dll",
+  "name": "@winfe/win-dll",
   "version": "1.0.1",
   "description": "对接混合框架",
   "author": "sunhui <sun_hui@winning.com.cn>",
