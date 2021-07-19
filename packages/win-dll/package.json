@@ -1,0 +1,41 @@
+{
+  "name": "win-dll",
+  "version": "1.0.0",
+  "description": "对接混合框架",
+  "author": "sunhui <sun_hui@winning.com.cn>",
+  "homepage": "https://github.com/cool-fe/winfe#readme",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cool-fe/winfe.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/cool-fe/winfe/issues"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.14.6",
+    "js-cookie": "^2.2.1"
+  },
+  "devDependencies": {
+    "element-ui": "^2.15.3"
+  },
+  "peerDependencies": {
+    "element-ui": ">= 2.15.3"
+  }
+}
