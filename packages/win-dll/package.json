@@ -4,26 +4,31 @@
   "description": "对接混合框架",
   "author": "sunhui <sun_hui@winning.com.cn>",
   "homepage": "https://github.com/cool-fe/winfe#readme",
-  "license": "ISC",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "directories": {
-    "lib": "lib",
+    "src": "src",
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "publishConfig": {
-    "registry": "http://registry.npmjs.org/"
+    "registry": "http://registry.npmjs.org/",
+    "access": "public"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cool-fe/winfe.git"
+    "type": "ts",
+    "directory": "packages/winfe-request",
+    "url": "https://github.com/cool-fe/winfe.git"
   },
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "engines": {
+    "node": ">=12.0.0",
+    "browser": ">= 68"
   },
   "bugs": {
     "url": "https://github.com/cool-fe/winfe/issues"
@@ -37,5 +42,6 @@
   },
   "peerDependencies": {
     "element-ui": ">= 2.15.3"
-  }
+  },
+  "license": "MIT"
 }
