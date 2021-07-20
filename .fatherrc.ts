@@ -9,9 +9,8 @@ const otherPkgs = readdirSync(join(__dirname, 'packages')).filter(
 );
 
 export default {
-  target: 'node',
-  nodeVersion: 12,
-  cjs: { type: 'babel', lazy: true },
+  target: 'browser',
+  cjs: { type: 'rollup', lazy: true },
   disableTypeCheck: true,
   pkgs: [...headPkgs, ...otherPkgs, ...tailPkgs]
 };
