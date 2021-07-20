@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.34 (2021-07-20)
+
+
+### Bug Fixes
+
+* modify win-dll package.json ([f9d2171](https://github.com/cool-fe/winfe/commit/f9d21715b28789fd0b9fe26f4be310498881a102))
+
+
+
+
+
 ## 1.0.33 (2021-07-19)
 
 
