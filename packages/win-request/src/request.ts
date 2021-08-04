@@ -16,6 +16,7 @@ export interface ResponseData {
   errorDetail: ErrorDetail;
   appid: string;
   hostip: string;
+  data: any;
 }
 
 declare module 'axios' {

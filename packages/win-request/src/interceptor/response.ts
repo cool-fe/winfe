@@ -24,7 +24,18 @@ const responseInterceptor = (service: AxiosInstance): void => {
           data.errorDetail.id = (data || {}).traceid;
           data.errorDetail.path = url;
         }
-        return Promise.reject(res);
+
+        const errorData: AxiosError<ResponseData> = {
+          name: 'api error',
+          config,
+          message: data.errorDetail.message || '',
+          stack: '',
+          response: res,
+          isAxiosError: false,
+          toJSON: () => res
+        };
+
+        return Promise.reject(errorData);
       }
     },
     (err: AxiosError<ResponseData>) => {
