@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.35 (2021-08-04)
+
+
+### Bug Fixes
+
+* 当接口请求成功，业务失败时构造标准错误对象 ([dbf54fe](https://github.com/cool-fe/winfe/commit/dbf54fe333dd2a975498ae9537af3e3984c08380))
+
+
+
+
+
 ## 1.0.34 (2021-07-20)
 
 
