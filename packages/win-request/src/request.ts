@@ -1,14 +1,13 @@
 import axios from 'axios';
-import type { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosError } from 'axios';
-
 import { Message } from 'element-ui';
-
+import type { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosError } from 'axios';
 import { getCookieData as getCookieDataUtil, showErrMessage, clearPendingRequest } from './util';
-
 import type { COOKIE_DATA, MessageInstance, ErrorDetail } from './util';
 
 import requestInterceptor from './interceptor/request';
 import responseInterceptor from './interceptor/response';
+
+import debug, { debugFallback, isDebugger } from './debug';
 
 export interface ResponseData {
   success: boolean;
@@ -42,6 +41,7 @@ declare module 'axios' {
     showType?: 'success' | 'warning' | 'info' | 'error';
     dataField?: string;
     errorField?: string;
+    debugId?: string;
   }
 }
 
@@ -87,6 +87,24 @@ export default class Request {
     clearPendingRequest(whiteList);
   }
 
+  /**
+   * debug拦截
+   * @param data
+   * @returns
+   */
+  debugHandler(config: AxiosRequestConfig): AxiosPromise<ResponseData> {
+    return debug(config)
+      .then(this.generate)
+      .then((res) => {
+        debugFallback(res, config);
+        return res;
+      })
+      .catch((err) => {
+        debugFallback(err, config);
+        return err;
+      });
+  }
+
   generate(data: AxiosRequestConfig): AxiosPromise<ResponseData> {
     return (this.service(data) as AxiosPromise<ResponseData>).catch(
       (err: AxiosError<ResponseData>) => {
@@ -123,12 +141,14 @@ export default class Request {
       const options: AxiosRequestConfig = { ...config, ...customer };
       if (options.method === undefined) options.method = 'post'; // 处理默认的method，卫宁内部有效
       const { method } = options;
-      return this.generate({
+      const requestConfig = {
         url,
         method,
         [method === 'post' ? 'data' : 'params']: data,
         ...options
-      });
+      };
+      if (isDebugger) return this.debugHandler(requestConfig);
+      return this.generate(requestConfig);
     };
   }
 }
