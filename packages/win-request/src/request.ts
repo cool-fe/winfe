@@ -10,6 +10,8 @@ import type { COOKIE_DATA, MessageInstance, ErrorDetail } from './util';
 import requestInterceptor from './interceptor/request';
 import responseInterceptor from './interceptor/response';
 
+import debug, { debugBack } from './debug'
+
 export interface ResponseData {
   success: boolean;
   traceid: string;
@@ -87,6 +89,28 @@ export default class Request {
     clearPendingRequest(whiteList);
   }
 
+  /**
+   * debug拦截
+   * @param data 
+   * @returns 
+   */
+  async debugHandler(data: AxiosRequestConfig): AxiosPromise<ResponseData>{
+    await debug(data)
+    let res,debugRes
+    try {
+      res = await this.generate(data)
+      debugRes = res
+    } catch (error) {
+      debugRes = error
+      throw error
+    }
+    finally{
+      debugBack(debugRes,data)
+    } 
+    return res
+
+  }
+
   generate(data: AxiosRequestConfig): AxiosPromise<ResponseData> {
     return (this.service(data) as AxiosPromise<ResponseData>).catch(
       (err: AxiosError<ResponseData>) => {
@@ -123,7 +147,7 @@ export default class Request {
       const options: AxiosRequestConfig = { ...config, ...customer };
       if (options.method === undefined) options.method = 'post'; // 处理默认的method，卫宁内部有效
       const { method } = options;
-      return this.generate({
+      return this.debugHandler({
         url,
         method,
         [method === 'post' ? 'data' : 'params']: data,
