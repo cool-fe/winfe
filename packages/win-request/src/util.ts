@@ -1,6 +1,7 @@
 import Cookie from 'js-cookie';
-import type { Canceler, AxiosError, AxiosRequestConfig } from 'axios';
+import type { Canceler, AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import type { Message } from 'element-ui';
+import type { ResponseData } from './request';
 
 export interface ErrorDetail {
   id: string;
@@ -226,3 +227,64 @@ export const handleError = (err: AxiosError): AxiosError => {
 };
 
 export const noop = (): void => undefined;
+
+/**
+ * Update an Error with the specified config, error code, and response.
+ *
+ * @param {Error} error The error to update.
+ * @param {Object} config The config.
+ * @param {string} [code] The error code (for example, 'ECONNABORTED').
+ * @param {Object} [request] The request.
+ * @param {Object} [response] The response.
+ * @returns {Error} The error.
+ */
+function enhanceError(
+  error: AxiosError<ResponseData>,
+  config: AxiosRequestConfig,
+  code?: string,
+  request?: any,
+  response?: AxiosResponse<ResponseData>
+) {
+  error.config = config;
+  if (code) {
+    error.code = code;
+  }
+  error.request = request;
+  error.response = response;
+  error.isAxiosError = true;
+  error.toJSON = function toJSON() {
+    return {
+      // Standard
+      message: this.message,
+      name: this.name,
+      // Microsoft
+      //@ts-ignore
+      description: this.description,
+      //@ts-ignore
+      number: this.number,
+      // Mozilla
+      //@ts-ignore
+      fileName: this.fileName,
+      //@ts-ignore
+      lineNumber: this.lineNumber,
+      //@ts-ignore
+      columnNumber: this.columnNumber,
+      stack: this.stack,
+      // Axios
+      config: this.config,
+      code: this.code
+    };
+  };
+  return error;
+}
+
+export function createError(
+  message: string,
+  config: AxiosRequestConfig,
+  code?: string,
+  request?: any,
+  response?: AxiosResponse<ResponseData>
+): AxiosError<ResponseData> {
+  const error = new Error(message) as AxiosError<ResponseData>;
+  return enhanceError(error, config, code, request, response);
+}

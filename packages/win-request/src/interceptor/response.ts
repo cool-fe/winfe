@@ -3,7 +3,7 @@ import type { AxiosInstance, AxiosResponse } from 'axios';
 
 import type { ResponseData } from '../request';
 
-import { pendingRequest, handleError, showSuccessMessage } from '../util';
+import { pendingRequest, handleError, showSuccessMessage, createError } from '../util';
 
 const responseInterceptor = (service: AxiosInstance): void => {
   service.interceptors.response.use(
@@ -25,19 +25,12 @@ const responseInterceptor = (service: AxiosInstance): void => {
           data.errorDetail.path = url;
         }
 
-        const errorData: AxiosError<ResponseData> = {
-          name: 'api error',
-          config,
-          message: data.errorDetail.message || '',
-          stack: '',
-          response: res,
-          isAxiosError: false,
-          toJSON: () => res
-        };
-
-        return Promise.reject(errorData);
+        return Promise.reject(
+          createError('winning api success=false', config, data.errorDetail.id, res.request, res)
+        );
       }
     },
+    // eslint-disable-next-line complexity
     (err: AxiosError<ResponseData>) => {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
@@ -50,32 +43,29 @@ const responseInterceptor = (service: AxiosInstance): void => {
         } catch (error) {}
       }
       const { config, response } = err;
-      const { data } = response || {};
+      const { data = { traceid: '', appid: '', hostip: '', data: null } } = response || {};
       // 删除pendingRequest 中的存储
       if (config && pendingRequest.has(config.url || '')) {
         pendingRequest.delete(config.url || '');
       }
 
-      const errorData = {
-        ...err,
-        message: err.message,
-        stack: err.stack,
-        response: {
-          ...response,
-          data: {
-            success: false,
-            data,
-            errorDetail: {
-              path: config ? config.url : err.url || '',
-              detailMsg: err.stack,
-              message: err.message
-            }
+      const errResponse: AxiosResponse<ResponseData> = {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ...response!,
+        data: {
+          ...(data || {}),
+          success: false,
+          errorDetail: {
+            id: err.code || '',
+            path: config ? config.url : err.url || '',
+            detailMsg: err.stack,
+            message: err.message
           }
         }
       };
 
       handleError(err);
-      return Promise.reject(errorData);
+      return Promise.reject(createError(err.message, config, err.code, err.request, errResponse));
     }
   );
 };
