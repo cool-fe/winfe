@@ -10,7 +10,7 @@ const otherPkgs = readdirSync(join(__dirname, 'packages')).filter(
 
 export default {
   target: 'browser',
-  cjs: { type: 'rollup', lazy: true },
+  cjs: { type: 'rollup', lazy: false },
   disableTypeCheck: true,
   pkgs: [...headPkgs, ...otherPkgs, ...tailPkgs]
 };
