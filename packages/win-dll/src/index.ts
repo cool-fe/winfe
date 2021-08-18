@@ -7,4 +7,6 @@
  */
 import WinningDll from './core/index';
 
+const dsx = 1;
+
 export default WinningDll;
