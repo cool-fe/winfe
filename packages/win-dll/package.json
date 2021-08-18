@@ -1,6 +1,6 @@
 {
   "name": "@winfe/win-dll",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "对接混合框架",
   "author": "sunhui <sun_hui@winning.com.cn>",
   "homepage": "https://github.com/cool-fe/winfe#readme",
