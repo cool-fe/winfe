@@ -159,7 +159,7 @@ export const showErrMessage = (message: MessageInstance, err: AxiosError): void 
   const { config, message: msg, response } = err;
   const { failTxt = '', showDetail, url, timeout, showType } = config;
   message({
-    message: msg || failTxt,
+    message: response?.data?.errorDetail.message || failTxt || msg,
     type: showType || 'error',
     showDetail: showDetail !== false,
     errorUrl: url,
