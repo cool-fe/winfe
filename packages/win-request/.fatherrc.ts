@@ -6,7 +6,7 @@ export default {
     file: 'win-request',
     minFile: true,
     sourcemap: true,
-    globals: { axios: 'axios', 'element-ui': 'element-ui' }
+    globals: { 'element-ui': 'element-ui' }
   },
   runtimeHelpers: true,
   disableTypeCheck: false
