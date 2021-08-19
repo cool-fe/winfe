@@ -43,5 +43,6 @@
   "peerDependencies": {
     "element-ui": ">= 2.15.3"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "gitHead": "fdbd6292864a6350221c17f3fd827748722a8072"
 }
