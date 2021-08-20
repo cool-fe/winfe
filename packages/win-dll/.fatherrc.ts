@@ -6,7 +6,7 @@ export default {
     file: 'win-dll',
     minFile: true,
     sourcemap: true,
-    globals: { 'element-ui': 'element-ui' }
+    globals: { 'element-ui': 'elementUi' }
   },
   runtimeHelpers: true,
   disableTypeCheck: false

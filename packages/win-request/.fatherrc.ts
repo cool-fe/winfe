@@ -6,8 +6,12 @@ export default {
     file: 'win-request',
     minFile: true,
     sourcemap: true,
-    globals: { 'element-ui': 'element-ui' }
+    globals: { 'element-ui': 'elementUi' }
   },
   runtimeHelpers: true,
-  disableTypeCheck: false
+  disableTypeCheck: false,
+  nodeResolveOpts: {
+    browser: true,
+    preferBuiltins: true
+  }
 };
